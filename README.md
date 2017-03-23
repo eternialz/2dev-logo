@@ -12,6 +12,7 @@ camelCase
 
 ## Classes & Methods & Functions:
 
+```
 Logo
 |
 |   attributs:
@@ -60,3 +61,4 @@ Cursor
 |   private Void setAngle(Int angle)
 |   private Void setX(int x)
 |   private Void setY(int y)
+```
