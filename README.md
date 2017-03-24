@@ -13,52 +13,63 @@ camelCase
 ## Classes & Methods & Functions:
 
 ```
-Logo
-|
-|   attributs:
-|   |   Cursor turtle
-|   |   javafx.scene.canvas.Canvas drawingDisplay
-|   |   javafx.scene.canvas.Canvas cursorDisplay
-|
-|   Void av(int distance) //avancer de "distance"
-|   Void re(int distance) //reculer de "distance"
-|   Void td(int angle) //rotation de "angle" vers la droite
-|   Void tg(int angle) //rotation de "angle" vers la gauche
-|   Void fcc(string color) //change la couleur du tracé en "color"
-|   Void lc() //lever le curseur
-|   Void bc() //baisser le curseur
-|   Void ct() //cacher le curseur
-|   Void mt() //afficher le curseur
-|   Void repete(int times, string commands) //repeter "times" fois "commands"
-|   Void ve() //reset
-|
-|   Void execute(Table<string> commands) // Execute une par une les commandes correspondantes à chacune des chaînes du tableau "commands"
-|   Void refresh() // Actualise l'affichage
-|
-|   String input() // Fonction pour gérer les inputs de l'utilisateur
-|   Table<string> parser(string commands) // Sépare une chaines de caractères en sous chaînes correspondant à une commande LOGO
+Interpreter
+
+    attributs:
+        private Cursor turtle
+        private javafx.scene.canvas.Canvas drawingDisplay
+        private javafx.scene.canvas.Canvas cursorDisplay
+        private javafx.scene.canvas.GraphicsContext drawingDisplay
+        private javafx.scene.canvas.GraphicsContext cursorDisplay
+
+    public void av(int distance) //avancer de "distance"
+    public void re(int distance) //reculer de "distance"
+    private void moveDistance(int distance, int angle) // bouger dans une direction
+    public void td(int angle) //rotation de "angle" vers la droite
+    public void tg(int angle) //rotation de "angle" vers la gauche
+    public void fcc(string color) //change la couleur du tracé en "color"
+    public void lc() //lever le curseur
+    public void bc() //baisser le curseur
+    public void ct() //cacher le curseur
+    public void mt() //afficher le curseur
+    public void repete(int times, string commands) //repeter "times" fois "commands"
+    public void ve() //reset
+
+    public void refresh() // Actualise l'affichage
+
+    public String input() // Fonction pour gérer les inputs de l'utilisateur
+    public Table<string> parser(string commands) // Sépare une chaines de caractères en sous chaînes correspondant à une commande LOGO
 
 Cursor
-|
-|   attributs:
-|   |   private Boolean Hidden
-|   |   private Boolean Down
-|   |
-|   |   private Int x
-|   |   private Int y
-|   |   private Int angle
-|   |   private String color
-|
-|   public Void setColor(String color)
-|   public Void turn(Int angle)
-|   public Void moveX(Int x)
-|   public Void moveY(Int y)
-|   public Void toggleDown()
-|   public Void toggleHide()
-|   public Boolean isDown?()
-|   public Boolean isHidden?()
-|
-|   private Void setAngle(Int angle)
-|   private Void setX(int x)
-|   private Void setY(int y)
+
+    attributs:
+        private Boolean Hidden
+        private Boolean Down
+
+        private Int x
+        private Int y
+        private Int angle
+        private String color
+
+    public Cursor(int x, int y) {
+     	this.x = x;
+     	this.y = y;
+     	this.angle = 90;
+     	this.color = "#000";
+    	this.hidden = false;
+    	this.down = true;
+    }
+
+    public int getX()
+    public void moveX(Int x)
+    public int getY()
+    public void moveY(Int y)
+    public int getAngle()
+    public void turn(Int angle)
+    public String getColor()
+    public void setColor(String color)
+    public Boolean isHidden()
+    public void toggleHide()
+    public Boolean isDown()
+    public void toggleDown()
 ```
