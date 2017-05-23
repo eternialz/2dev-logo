@@ -21,17 +21,24 @@ public class Suplogo extends Application {
 
         Scene scene = new Scene(root, 800, 800);
 
-        Canvas drawingCanvas = new Canvas(800, 600);
-        Canvas cursorCanvas = new Canvas(800, 600);
+        Canvas drawingCanvas = new Canvas(800, 800);
+        Canvas cursorCanvas = new Canvas(800, 800);
 
         root.getChildren().add(drawingCanvas);
         root.getChildren().add(cursorCanvas);
 
-        Interpreter interpreter = new Interpreter(new Cursor(0,0), drawingCanvas, cursorCanvas);
+        Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas);
 
         primaryStage.setTitle("SupLogo");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        interpreter.td(20);
+        interpreter.av(20);
+        interpreter.refresh(); // Set color and refresh the cursor canvas
+        interpreter.td(20);
+        interpreter.av(20);
+        interpreter.refresh(); // Set color and refresh the cursor canvas
     }
 
     /**
