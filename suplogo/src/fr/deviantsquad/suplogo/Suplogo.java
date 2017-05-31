@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import fr.deviantsquad.suplogo.cursor.Cursor;
@@ -19,13 +20,18 @@ public class Suplogo extends Application {
 
         StackPane root = new StackPane();
 
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(root, 800, 850);
 
         Canvas drawingCanvas = new Canvas(800, 800);
         Canvas cursorCanvas = new Canvas(800, 800);
+        final TextField input = new TextField();
+
+        input.setLayoutX(0);
+        input.setTranslateY(400);
 
         root.getChildren().add(drawingCanvas);
         root.getChildren().add(cursorCanvas);
+        root.getChildren().add(input);
 
         Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas);
 

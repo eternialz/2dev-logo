@@ -30,7 +30,7 @@ public class Interpreter {
 
     public void input()
     {
-
+        
     }
 
     public void parser()
@@ -40,6 +40,7 @@ public class Interpreter {
 
     public void execute(String commands)
     {
+
 
     }
 
