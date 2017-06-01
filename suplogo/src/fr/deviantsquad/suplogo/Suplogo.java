@@ -26,7 +26,6 @@ public class Suplogo extends Application {
         Canvas cursorCanvas = new Canvas(800, 800);
         final TextField input = new TextField();
 
-        input.setLayoutX(0);
         input.setTranslateY(400);
 
         root.getChildren().add(drawingCanvas);
