@@ -55,7 +55,7 @@ public class Cursor {
     }
 
     public void turn(int angle) {
-    	this.angle = this.angle + angle % 360;
+    	this.angle = (this.angle + angle) % 360;
     }
 
     public String getColor() {

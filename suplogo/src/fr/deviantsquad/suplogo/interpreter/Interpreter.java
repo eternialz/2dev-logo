@@ -30,18 +30,17 @@ public class Interpreter {
 
     public void input()
     {
-        
+        //récupère l'input
     }
 
-    public void parser()
+    private void parser(String commands)
     {
-
+        //sépare l'input
     }
 
-    public void execute(String commands)
+    private void execute()
     {
-
-        
+        //exécute les commandes correspondantes à chacune dans le tableau
     }
 
     public void refresh()
@@ -140,7 +139,7 @@ public class Interpreter {
     {
         for(int i = 0; i<= times; i++)
         {
-            execute(commands);
+            parser(commands);
         }
     }
 
