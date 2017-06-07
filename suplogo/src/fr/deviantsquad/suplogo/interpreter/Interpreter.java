@@ -2,6 +2,7 @@ package fr.deviantsquad.suplogo.interpreter;
 
 import fr.deviantsquad.suplogo.cursor.Cursor;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.TextField;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.lang.*;
@@ -12,13 +13,15 @@ public class Interpreter {
     private GraphicsContext drawingContext;
     private Canvas cursorDisplay;
     private GraphicsContext cursorContext;
+    private TextField input;
 
-    public Interpreter(Cursor cursor, Canvas drawingDisplay, Canvas cursorDisplay) {
+    public Interpreter(Cursor cursor, Canvas drawingDisplay, Canvas cursorDisplay, TextField input) {
         this.cursor = cursor;
         this.drawingDisplay = drawingDisplay;
         this.cursorDisplay = cursorDisplay;
         this.drawingContext = drawingDisplay.getGraphicsContext2D();
         this.cursorContext = cursorDisplay.getGraphicsContext2D();
+        this.input = input;
 
         //Default cursorCanvas settings
         this.cursorContext.setLineWidth(3);

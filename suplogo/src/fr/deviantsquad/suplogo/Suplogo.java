@@ -32,7 +32,7 @@ public class Suplogo extends Application {
         root.getChildren().add(cursorCanvas);
         root.getChildren().add(input);
 
-        Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas);
+        Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas, input);
 
         primaryStage.setTitle("SupLogo");
         primaryStage.setScene(scene);
