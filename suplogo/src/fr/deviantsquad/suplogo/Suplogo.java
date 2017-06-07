@@ -1,39 +1,38 @@
 package fr.deviantsquad.suplogo;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import fr.deviantsquad.suplogo.cursor.Cursor;
 import fr.deviantsquad.suplogo.interpreter.Interpreter;
+import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 public class Suplogo extends Application {
 
     @Override
     public void start(Stage primaryStage) {
 
-        StackPane root = new StackPane();
+    	BorderPane root = new BorderPane();
+    	StackPane center = new StackPane();
 
-        Scene scene = new Scene(root, 800, 850);
+        Scene scene = new Scene(root, 800, 880);
 
         Canvas drawingCanvas = new Canvas(800, 800);
         Canvas cursorCanvas = new Canvas(800, 800);
         final TextField input = new TextField();
 
-        input.setTranslateY(400);
-
-        root.getChildren().add(drawingCanvas);
-        root.getChildren().add(cursorCanvas);
-        root.getChildren().add(input);
+        center.getChildren().add(drawingCanvas);
+        center.getChildren().add(cursorCanvas);
+        root.setBottom(input);
+        root.setCenter(center);
 
         Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas, input);
 
+        primaryStage.setMinHeight(880);
+        primaryStage.setMinWidth(800);
         primaryStage.setTitle("SupLogo");
         primaryStage.setScene(scene);
         primaryStage.show();

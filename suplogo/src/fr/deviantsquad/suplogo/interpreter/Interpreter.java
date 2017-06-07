@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.lang.*;
+import java.lang.reflect.Method;
 
 public class Interpreter {
     private Cursor cursor;
