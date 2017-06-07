@@ -5,6 +5,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.lang.*;
 import java.lang.reflect.Method;
 
@@ -34,7 +37,9 @@ public class Interpreter {
 
     public void input()
     {
-        //récupère l'input
+        input.setOnAction(e -> {
+           parser(input.getText());
+        });
     }
 
     private void parser(String commands)
@@ -42,9 +47,45 @@ public class Interpreter {
         //sépare l'input
     }
 
-    private void execute()
+    private void execute(String[] commands)
     {
         //exécute les commandes correspondantes à chacune dans le tableau
+
+        Method methods[];
+        Method method = null;
+        String methodName;
+
+        for(int i = 0; i<= commands.length; i++)
+        {
+            methodName = commands[i];
+            // Try to find the method corresponding to the command
+            try {
+                methods = this.getClass().getDeclaredMethods();
+
+                for(int x = 0; i < methods.length; x++) {
+                    if (methods[i].getName() == methodName) {
+                        method = methods[i];
+                    }
+                }
+            }
+            catch (SecurityException e)
+            {
+                e.printStackTrace();
+            }
+
+            // Try to execute the method found
+            try
+            {
+                if (method != null)
+                {
+                    method.invoke(this, method.getGenericParameterTypes());
+                }
+            }
+            catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void refresh()
