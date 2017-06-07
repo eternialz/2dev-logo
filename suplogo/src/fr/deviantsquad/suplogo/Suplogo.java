@@ -10,14 +10,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class Suplogo extends Application {
-
+public class Suplogo extends Application
+{
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage)
+    {
 
         // Add the zones
-    	BorderPane root = new BorderPane();
-    	StackPane center = new StackPane();
+        BorderPane root = new BorderPane();
+        StackPane center = new StackPane();
 
         Scene scene = new Scene(root, 800, 880);
 
@@ -48,14 +49,15 @@ public class Suplogo extends Application {
         primaryStage.setTitle("SupLogo");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
+
         interpreter.refresh();
     }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch(args);
     }
 }
