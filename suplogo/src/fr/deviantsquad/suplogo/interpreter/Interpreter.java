@@ -45,6 +45,7 @@ public class Interpreter
             String command = input.getText();
             history.add(command);
             historyIndex = history.size();
+            command = command.replaceAll("( )+", " ");
             parser(command);
 
             input.clear();
@@ -82,10 +83,12 @@ public class Interpreter
         String[] splitResults;
         Pattern isChar = Pattern.compile("[a-zA-Z]");
         Matcher matcher;
-        int counter = 0;// Count different commands
-        int counterChar = 0;
+        int counter;// Count different commands
+        int counterChar;
         while(commands.length() > 0) // While there's something to parse
         {
+            counterChar = 0;
+            counter = 0;
             splitResults = commands.split(" ", 2); // want only the first word
             matcher = isChar.matcher(String.valueOf(splitResults[0].charAt(0)));
             if(matcher.find())
@@ -129,7 +132,7 @@ public class Interpreter
                         }
                     }
                     // Avoid out of range index
-                    if(commands.length() > counterChar + 2)
+                    if(commands.length() > counterChar + 1)
                     {
                         commands = commands.substring(counterChar + 1);
                     }
@@ -184,6 +187,7 @@ public class Interpreter
             else
             {
                 methodName = input[0].toLowerCase();
+                argument = null;
             }
 
             try
@@ -330,7 +334,7 @@ public class Interpreter
 
     public void repete(int times, String commands) // Repeat commands x times
     {
-        commands = commands.substring(1, commands.length() - 1);
+        commands = commands.substring(commands.indexOf("[") + 1).substring(0, commands.lastIndexOf("]") - 1);
 
         for(int i = 0; i <= times; i++)
         {
