@@ -59,30 +59,46 @@ public class Interpreter {
     //sépare l'input
     private void parser(String commands) throws InterruptedException
     {
+        //Create an ArrayList of all distinct command in commands
         ArrayList<String> results = new ArrayList<>();
         int index = -1;
         String[] splitResults;
         Pattern isChar = Pattern.compile("[a-zA-Z]");
         Matcher matcher;
-        int counter = 0;
+        int counter = 0;//Count different commands
         int counterChar = 0;
-        while(commands.length() > 0){
-            splitResults = commands.split(" ", 2);
+        while(commands.length() > 0) //While there's something to parse
+        {
+            splitResults = commands.split(" ", 2); //want only the first word
             matcher = isChar.matcher(String.valueOf(splitResults[0].charAt(0)));
             if(matcher.find()){
+                //New command
                 index++;
                 results.add(splitResults[0]);
-                commands = splitResults[1];
+                if (commands.equals(splitResults[0]))
+                {
+                    commands = "";
+                }
+                else
+                {
+                    commands = splitResults[1];
+                }
             }
             else {
                 if(splitResults[0].charAt(0) == '['){
+                    //Repete case, we add all characters until we find corresponing
+                    //closed brackets
                     results.set(index, results.get(index) + " ");
                     commands = String.join(" ", splitResults);
-                    for(int i=0; i < commands.length(); i++){
-                        if(commands.charAt(i) == '['){
+                    for(int i=0; i < commands.length(); i++)
+                    {
+                        //Add character one by one
+                        if(commands.charAt(i) == '[')
+                        {
                             counter++;
                         }
-                        else if(commands.charAt(i) == ']'){
+                        else if(commands.charAt(i) == ']')
+                        {
                             counter--;
                         }
                         results.set(index, results.get(index) + commands.charAt(i));
@@ -91,6 +107,7 @@ public class Interpreter {
                             break;
                         }
                     }
+                    //Avoid out of range index
                     if (commands.length() > counterChar + 2)
                     {
                         commands = commands.substring(counterChar + 1);
@@ -100,7 +117,9 @@ public class Interpreter {
                         commands = "";
                     }
                 }
-                else{
+                else
+                {
+                    //if end of commands splitResults[1] is null
                     results.set(index, results.get(index) + " " + splitResults[0]);
                     if(splitResults[0].equals(commands))
                     {
@@ -130,7 +149,6 @@ public class Interpreter {
         for(int i = 0; i < commands.size(); i++)
         {
             input = commands.get(i).split(" ");
-            System.out.println(commands.get(i));
             if (input.length > 2)
             {
                 repete(Integer.parseInt(input[1]), commands.get(i).split(" ", 3)[2]);
@@ -143,12 +161,11 @@ public class Interpreter {
             }
             else
             {
-                methodName = input[0];
+                methodName = input[0].toLowerCase();
             }
 
             try {
                 methods = this.getClass().getDeclaredMethods(); // Get all methods
-
                 for(int x = 0; x < methods.length; x++) {
                     if (methods[x].getName().equals(methodName)) { // If the method exists
                         method = methods[x]; // Set the method to execute
@@ -301,8 +318,6 @@ public class Interpreter {
     public void repete(int times, String commands) throws InterruptedException // Repeat commands x times
     {
         commands = commands.substring(1, commands.length() - 1);
-
-        System.out.println(commands);
 
         for(int i = 0; i<= times; i++)
         {
