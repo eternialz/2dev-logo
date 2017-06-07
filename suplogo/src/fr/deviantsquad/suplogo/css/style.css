@@ -1,0 +1,13 @@
+.text-field {
+    -fx-background-color: black, black, black;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-background-radius: 0;
+    -fx-text-inner-color: #DDDDDD;
+    -fx-padding: 1em 1em 1em 1em;
+    -fx-font-size: 16;
+}
+
+.text-field:focused {
+    -fx-background-color: black, black, black;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}

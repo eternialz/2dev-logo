@@ -9,7 +9,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.lang.*;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Interpreter {
     private Cursor cursor;
@@ -33,38 +38,120 @@ public class Interpreter {
 
         //Default drawingCanvas settings
         this.drawingContext.setLineWidth(2);
+
+        input();
     }
 
     public void input()
     {
+        // Add an event to execute the commands when pressing ENTER
         input.setOnAction(e -> {
-           parser(input.getText());
+            try {
+                parser(input.getText());
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+
+            input.clear();
         });
     }
 
-    private void parser(String commands)
+    //sépare l'input
+    private void parser(String commands) throws InterruptedException
     {
-        //sépare l'input
+        ArrayList<String> results = new ArrayList<>();
+        int index = -1;
+        String[] splitResults;
+        Pattern isChar = Pattern.compile("[a-zA-Z]");
+        Matcher matcher;
+        int counter = 0;
+        int counterChar = 0;
+        while(commands.length() > 0){
+            splitResults = commands.split(" ", 2);
+            matcher = isChar.matcher(String.valueOf(splitResults[0].charAt(0)));
+            if(matcher.find()){
+                index++;
+                results.add(splitResults[0]);
+                commands = splitResults[1];
+            }
+            else {
+                if(splitResults[0].charAt(0) == '['){
+                    results.set(index, results.get(index) + " ");
+                    commands = String.join(" ", splitResults);
+                    for(int i=0; i < commands.length(); i++){
+                        if(commands.charAt(i) == '['){
+                            counter++;
+                        }
+                        else if(commands.charAt(i) == ']'){
+                            counter--;
+                        }
+                        results.set(index, results.get(index) + commands.charAt(i));
+                        counterChar++;
+                        if(counter == 0){
+                            break;
+                        }
+                    }
+                    if (commands.length() > counterChar + 2)
+                    {
+                        commands = commands.substring(counterChar + 1);
+                    }
+                    else
+                    {
+                        commands = "";
+                    }
+                }
+                else{
+                    results.set(index, results.get(index) + " " + splitResults[0]);
+                    if(splitResults[0].equals(commands))
+                    {
+                        commands = "";
+                    }
+                    else
+                    {
+                        commands = splitResults[1];
+                    }
+                }
+            }
+        }
+        execute(results);
     }
 
-    private void execute(String[] commands)
+    private void execute(ArrayList<String> commands) throws InterruptedException
     {
-        //exécute les commandes correspondantes à chacune dans le tableau
+        // Execute the corresponding commands
 
-        Method methods[];
-        Method method = null;
+        Method methods[]; // List of all the possible methods
+        Method method = null; // The method to execute
+        String[] input;
         String methodName;
+        String argument = null;
 
-        for(int i = 0; i<= commands.length; i++)
+        // Try to find the method corresponding to the command
+        for(int i = 0; i < commands.size(); i++)
         {
-            methodName = commands[i];
-            // Try to find the method corresponding to the command
-            try {
-                methods = this.getClass().getDeclaredMethods();
+            input = commands.get(i).split(" ");
+            System.out.println(commands.get(i));
+            if (input.length > 2)
+            {
+                repete(Integer.parseInt(input[1]), commands.get(i).split(" ", 3)[2]);
+                continue;
+            }
+            else if (input.length == 2)
+            {
+                methodName = input[0].toLowerCase();
+                argument = input[1].toLowerCase();
+            }
+            else
+            {
+                methodName = input[0];
+            }
 
-                for(int x = 0; i < methods.length; x++) {
-                    if (methods[i].getName() == methodName) {
-                        method = methods[i];
+            try {
+                methods = this.getClass().getDeclaredMethods(); // Get all methods
+
+                for(int x = 0; x < methods.length; x++) {
+                    if (methods[x].getName().equals(methodName)) { // If the method exists
+                        method = methods[x]; // Set the method to execute
                     }
                 }
             }
@@ -76,9 +163,25 @@ public class Interpreter {
             // Try to execute the method found
             try
             {
-                if (method != null)
+                if (method != null) // If the method has been found
                 {
-                    method.invoke(this, method.getGenericParameterTypes());
+                    if (argument != null)
+                    {
+                        method.invoke(this, argument); // execute the command
+                    }
+                    else
+                    {
+                        method.invoke(this);
+                    }
+
+                    TimeUnit.MILLISECONDS.sleep(50); // Wait 200 milliseconds to give an effect of step by step
+                    this.drawingContext.save();
+                    this.drawingContext.restore();
+                    refresh();
+                }
+                else
+                {
+
                 }
             }
             catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
@@ -86,6 +189,7 @@ public class Interpreter {
                 e.printStackTrace();
             }
         }
+
     }
 
     public void refresh()
@@ -98,15 +202,24 @@ public class Interpreter {
         }
     }
 
+    /**
+        Cette fonction affiche le curseur
+    */
     private void displayCursor() {
+
         double rotationCenterX = this.cursor.getX();
         double rotationCenterY = this.cursor.getY();
 
+
         this.cursorContext.save();
+        // Translate the context to set the rotation point
         this.cursorContext.translate(rotationCenterX, rotationCenterY);
+        // Rotate the context
         this.cursorContext.rotate(45 + this.cursor.getAngle());
+
         this.cursorContext.translate(-rotationCenterX, -rotationCenterY);
 
+        // Create a rect in a rotated context to create a rotated rect
         this.cursorContext.fillRect(
             rotationCenterX - 3,
             rotationCenterY - 3,
@@ -114,25 +227,29 @@ public class Interpreter {
             6
         );
 
+        // Restore the context but keep the rotated rect
         this.cursorContext.restore();
     }
 
-    public void av(int distance) // Move front
+    public void av(String distance) // Move front
     {
-        moveDistance(distance, this.cursor.getAngle());
+        moveDistance(Integer.parseInt(distance), this.cursor.getAngle());
     }
 
-    public void re(int distance) // Move back
+    public void re(String distance) // Move back
     {
-        moveDistance(distance, ( 0 - this.cursor.getAngle()));
+        moveDistance(Integer.parseInt(distance), ( 0 - this.cursor.getAngle()));
     }
 
     private void moveDistance(int distance, int angle)
     {
+        // Use the trigonometry to get the distance to move for each axys (x and y)
         double moveX = Math.cos(Math.toRadians(angle)) * distance;
         double moveY = Math.sin(Math.toRadians(angle)) * distance;
 
+        // If the cursor is down
         if (this.cursor.isDown()) {
+            // Create the line from the cursor position to the cursor postion + the distance to move
             this.drawingContext.strokeLine(
                 this.cursor.getX(),
                 this.cursor.getY(),
@@ -141,18 +258,19 @@ public class Interpreter {
             );
         }
 
+        // Move the position of the cursor to the end of the new line
         this.cursor.moveX(moveX);
         this.cursor.moveY(moveY);
     }
 
-    public void td(int angle) // Turn
+    public void td(String angle) // Turn
     {
-        this.cursor.turn(0 - angle);
+        this.cursor.turn(0 - Integer.parseInt(angle));
     }
 
-    public void tg(int angle) // Turn
+    public void tg(String angle) // Turn
     {
-        this.cursor.turn(angle);
+        this.cursor.turn(Integer.parseInt(angle));
     }
 
     public void fcc(String color) // Set color
@@ -180,8 +298,12 @@ public class Interpreter {
         this.cursor.setHide(false);
     }
 
-    public void repete(int times, String commands) // Repeat commands x times
+    public void repete(int times, String commands) throws InterruptedException // Repeat commands x times
     {
+        commands = commands.substring(1, commands.length() - 1);
+
+        System.out.println(commands);
+
         for(int i = 0; i<= times; i++)
         {
             parser(commands);

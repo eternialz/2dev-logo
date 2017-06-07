@@ -16,8 +16,8 @@ public class Cursor {
     public Cursor(double x, double y) {
     	this.x = x;
     	this.y = y;
-    	this.angle = 90;
-    	this.color = "#000";
+    	this.angle = 90; // Default angle (down)
+    	this.color = "#000"; // Default color;
     	this.hidden = false;
     	this.down = true;
     }
