@@ -66,8 +66,8 @@ public class Interpreter
         input.setOnAction(e ->
         {
             String command = input.getText();
-            history.add(command);
-            historyIndex = history.size();
+            this.history.add(command);
+            this.historyIndex = this.history.size();
             command = command.replaceAll("( )+", " ").trim();
             parser(command);
 
@@ -76,24 +76,23 @@ public class Interpreter
 
         input.setOnKeyPressed(e ->
         {
-            if(e.getCode() == KeyCode.UP && historyIndex > 0)
+            if(e.getCode() == KeyCode.UP && this.historyIndex > 0)
             {
-                historyIndex--;
-                input.setText(history.get(historyIndex));
+                this.historyIndex--;
+                input.setText(this.history.get(this.historyIndex));
             }
-            else if(e.getCode() == KeyCode.DOWN && historyIndex < history.size())
+            else if(e.getCode() == KeyCode.DOWN && this.historyIndex < this.history.size())
             {
-                historyIndex++;
-                if(historyIndex == history.size())
+                this.historyIndex++;
+                if(this.historyIndex == this.history.size())
                 {
                     input.setText("");
                 }
                 else
                 {
-                    input.setText(history.get(historyIndex));
+                    input.setText(this.history.get(this.historyIndex));
                 }
             }
-
         });
     }
 
@@ -111,9 +110,9 @@ public class Interpreter
         Popup p = new Popup();
         p.getContent().add(box);
         p.setAutoHide(true);
-        Point2D pt = input.localToScreen(0, 0);
+        Point2D pt = this.input.localToScreen(0, 0);
         p.setX(pt.getX());
-        p.setY(pt.getY() - input.getHeight());
+        p.setY(pt.getY() - this.input.getHeight());
         p.show(this.stage);
         FadeTransition ft = new FadeTransition(Duration.millis(100), box);
         ft.setFromValue(0.0D);
@@ -161,7 +160,7 @@ public class Interpreter
                             execute(command, tas);
                         }
                     });
-                    Thread.sleep(speed);
+                    Thread.sleep(Interpreter.this.speed);
                 }
                 return null;
             }
@@ -500,11 +499,11 @@ public class Interpreter
         long l = Long.parseLong(newspeed);
         if(l < 0)
         {
-            speed = 0;
+            this.speed = 0;
         }
         else
         {
-            speed = l;
+            this.speed = l;
         }
     }
 }

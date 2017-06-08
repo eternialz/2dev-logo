@@ -6,8 +6,8 @@ public class Cursor
     private double y;
     private int angle;
     private String color;
-    private Boolean hidden;
-    private Boolean down;
+    private boolean hidden;
+    private boolean down;
 
     /**
      * Default Cursor constructor
@@ -27,12 +27,6 @@ public class Cursor
         return this.x;
     }
 
-    /*
-     * private void setX(int x) {
-     * this.x = x;
-     * }
-     */
-
     public void moveX(double x)
     {
         this.x += x;
@@ -42,12 +36,6 @@ public class Cursor
     {
         return this.y;
     }
-
-    /*
-     * private void setY(int y) {
-     * this.y = y;
-     * }
-     */
 
     public void moveY(double y)
     {
@@ -74,22 +62,22 @@ public class Cursor
         this.color = color;
     }
 
-    public Boolean isHidden()
+    public boolean isHidden()
     {
         return this.hidden;
     }
 
-    public void setHide(Boolean hidden)
+    public void setHide(boolean hidden)
     {
         this.hidden = hidden;
     }
 
-    public Boolean isDown()
+    public boolean isDown()
     {
         return this.down;
     }
 
-    public void setDown(Boolean down)
+    public void setDown(boolean down)
     {
         this.down = down;
     }
