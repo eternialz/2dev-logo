@@ -436,7 +436,7 @@ public class Interpreter
 
     public void re(String distance) // Move back
     {
-        moveDistance(Integer.parseInt(distance), (0 - this.cursor.getAngle()));
+        moveDistance(Integer.parseInt(distance), (180 + this.cursor.getAngle()%360));
     }
 
     private void moveDistance(int distance, int angle)
@@ -459,12 +459,12 @@ public class Interpreter
 
     public void td(String angle) // Turn
     {
-        this.cursor.turn(0 - Integer.parseInt(angle));
+        this.cursor.turn(Integer.parseInt(angle));
     }
 
     public void tg(String angle) // Turn
     {
-        this.cursor.turn(Integer.parseInt(angle));
+        this.cursor.turn(-Integer.parseInt(angle));
     }
 
     public void fcc(String color) // Set color
