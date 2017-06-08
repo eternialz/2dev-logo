@@ -68,7 +68,7 @@ public class Interpreter
             String command = input.getText();
             history.add(command);
             historyIndex = history.size();
-            command = command.replaceAll("( )+", " ");
+            command = command.replaceAll("( )+", " ").trim();
             parser(command);
 
             input.clear();
@@ -205,7 +205,7 @@ public class Interpreter
         {
             counterChar = 0;
             counter = 0;
-            splitResults = commands.split(" ", 2); // want only the first word
+            splitResults = commands.split(" ", 2);// want only the first word
             matcher = isChar.matcher(String.valueOf(splitResults[0].charAt(0)));
             if(matcher.find())
             {
@@ -378,8 +378,6 @@ public class Interpreter
                     method.invoke(Interpreter.this);
                 }
 
-                Interpreter.this.drawingContext.save();
-                Interpreter.this.drawingContext.restore();
                 Interpreter.this.refresh();
             }
             else
