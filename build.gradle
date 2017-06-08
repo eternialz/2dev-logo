@@ -33,6 +33,7 @@ task wrapper(type: Wrapper) {
 }
 
 launch4j {
-  mainClassName = 'fr.deviantsquad.suplogo.Suplogo'
-  icon = 'suplogo.ico'
+	outfile = 'Suplogo.exe'
+    mainClassName = 'fr.deviantsquad.suplogo.Suplogo'
+    icon = '../../suplogo.ico'
 }

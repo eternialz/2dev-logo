@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -47,6 +48,7 @@ public class Suplogo extends Application
         primaryStage.setMinHeight(880);
         primaryStage.setMinWidth(800);
         primaryStage.setTitle("SupLogo");
+        primaryStage.getIcons().add(new Image("/suplogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
 
