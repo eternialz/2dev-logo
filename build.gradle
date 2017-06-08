@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'edu.sc.seis.gradle:launch4j:2.3.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'edu.sc.seis.launch4j'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+group = 'fr.deviantsquad'
+archivesBaseName = 'suplogo'
+version = '1.0.0'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+dependencies {
+   
+}
+
+jar {
+    manifest { attributes 'Main-Class': 'fr.deviantsquad.suplogo.Suplogo' }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
+launch4j {
+  mainClassName = 'fr.deviantsquad.suplogo.Suplogo'
+  icon = 'myApp.ico'
+}

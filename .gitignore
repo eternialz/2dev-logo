@@ -5,3 +5,14 @@
 /suplogo/nbproject/private/
 /suplogo/build/
 /suplogo/dist/
+
+bin/
+.gradle/
+repos/
+build/
+.classpath
+.project
+.settings/
+
+Thumbs.db
+*~
