@@ -24,10 +24,6 @@ version = '1.0.0'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
-dependencies {
-   
-}
-
 jar {
     manifest { attributes 'Main-Class': 'fr.deviantsquad.suplogo.Suplogo' }
 }
@@ -38,5 +34,5 @@ task wrapper(type: Wrapper) {
 
 launch4j {
   mainClassName = 'fr.deviantsquad.suplogo.Suplogo'
-  icon = 'myApp.ico'
+  icon = 'suplogo.ico'
 }

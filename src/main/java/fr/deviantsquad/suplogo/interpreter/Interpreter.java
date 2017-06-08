@@ -68,7 +68,7 @@ public class Interpreter
             String command = input.getText();
             history.add(command);
             historyIndex = history.size();
-            command = command.replaceAll("( )+", " ");
+            command = command.replaceAll("( )+", " ").trim();
             parser(command);
 
             input.clear();
@@ -205,7 +205,7 @@ public class Interpreter
         {
             counterChar = 0;
             counter = 0;
-            splitResults = commands.split(" ", 2); // want only the first word
+            splitResults = commands.split(" ", 2);// want only the first word
             matcher = isChar.matcher(String.valueOf(splitResults[0].charAt(0)));
             if(matcher.find())
             {
@@ -434,7 +434,7 @@ public class Interpreter
 
     public void re(String distance) // Move back
     {
-        moveDistance(Integer.parseInt(distance), (0 - this.cursor.getAngle()));
+        moveDistance(Integer.parseInt(distance), (180 + this.cursor.getAngle()%360));
     }
 
     private void moveDistance(int distance, int angle)
@@ -457,12 +457,12 @@ public class Interpreter
 
     public void td(String angle) // Turn
     {
-        this.cursor.turn(0 - Integer.parseInt(angle));
+        this.cursor.turn(Integer.parseInt(angle));
     }
 
     public void tg(String angle) // Turn
     {
-        this.cursor.turn(Integer.parseInt(angle));
+        this.cursor.turn(-Integer.parseInt(angle));
     }
 
     public void fcc(String color) // Set color
