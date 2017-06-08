@@ -36,9 +36,7 @@ public class Interpreter
 {
     private Stage stage;
     private Cursor cursor;
-    private Canvas drawingDisplay;
     private GraphicsContext drawingContext;
-    private Canvas cursorDisplay;
     private GraphicsContext cursorContext;
     private TextField input;
     private List<String> history = new ArrayList<String>();
@@ -49,8 +47,6 @@ public class Interpreter
     {
         this.stage = stage;
         this.cursor = cursor;
-        this.drawingDisplay = drawingDisplay;
-        this.cursorDisplay = cursorDisplay;
         this.drawingContext = drawingDisplay.getGraphicsContext2D();
         this.cursorContext = cursorDisplay.getGraphicsContext2D();
         this.input = input;
@@ -351,7 +347,7 @@ public class Interpreter
             methods = this.getClass().getDeclaredMethods(); // Get all methods
             for(int x = 0; x < methods.length; x++)
             {
-                if(methods[x].getName().equals(methodName))
+                if(methods[x].getName().equals("cmd_" + methodName))
                 { // If the method exists
                     method = methods[x]; // Set the method to execute
                 }
@@ -426,12 +422,12 @@ public class Interpreter
         this.cursorContext.restore();
     }
 
-    public void av(String distance) // Move front
+    public void cmd_av(String distance) // Move front
     {
         moveDistance(Integer.parseInt(distance), this.cursor.getAngle());
     }
 
-    public void re(String distance) // Move back
+    public void cmd_re(String distance) // Move back
     {
         moveDistance(Integer.parseInt(distance), (180 + this.cursor.getAngle()%360));
     }
@@ -454,47 +450,47 @@ public class Interpreter
         this.cursor.moveY(moveY);
     }
 
-    public void td(String angle) // Turn
+    public void cmd_td(String angle) // Turn
     {
         this.cursor.turn(Integer.parseInt(angle));
     }
 
-    public void tg(String angle) // Turn
+    public void cmd_tg(String angle) // Turn
     {
         this.cursor.turn(-Integer.parseInt(angle));
     }
 
-    public void fcc(String color) // Set color
+    public void cmd_fcc(String color) // Set color
     {
         this.cursor.setColor(color);
     }
 
-    public void lc() // Set cursor up -> don't draw
+    public void cmd_lc() // Set cursor up -> don't draw
     {
         this.cursor.setDown(false);
     }
 
-    public void bc() // Set cursor down -> draw
+    public void cmd_bc() // Set cursor down -> draw
     {
         this.cursor.setDown(true);
     }
 
-    public void ct() // Hide cursor
+    public void cmd_ct() // Hide cursor
     {
         this.cursor.setHide(true);
     }
 
-    public void mt() // Show cursor
+    public void cmd_mt() // Show cursor
     {
         this.cursor.setHide(false);
     }
 
-    public void ve() // Clear drawing canvas
+    public void cmd_ve() // Clear drawing canvas
     {
         this.drawingContext.clearRect(0, 0, 800, 800);
     }
 
-    public void vi(String newspeed)
+    public void cmd_vi(String newspeed)
     {
         long l = Long.parseLong(newspeed);
         if(l < 0)
