@@ -367,7 +367,6 @@ public class Interpreter
         }
         catch(SecurityException e)
         {
-            e.printStackTrace();
             task.cancel();
         }
 
@@ -394,7 +393,6 @@ public class Interpreter
         }
         catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
-            e.printStackTrace();
             task.cancel();
         }
     }
@@ -499,7 +497,9 @@ public class Interpreter
 
     public void cmd_ve() // Clear drawing canvas
     {
+        this.cursor.resetPos();
         this.drawingContext.clearRect(0, 0, 800, 800);
+        refresh();
     }
 
     public void cmd_vi(String newspeed)

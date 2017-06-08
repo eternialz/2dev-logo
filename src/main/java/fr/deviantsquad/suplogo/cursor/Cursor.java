@@ -22,6 +22,12 @@ public class Cursor
         this.down = true;
     }
 
+    public void resetPos()
+    {
+        this.x = 400;
+        this.y = 400;
+    }
+
     public double getX()
     {
         return this.x;
