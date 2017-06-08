@@ -1,10 +1,10 @@
 # 2DEV - LOGO Turtle
 
-Projet dont le but est d'interpréter le langage LOGO qui permet de dessiner à l'aide d'un curseur et de commandes.
+This project's goal is to interpret the LOGO language that allows to draw with a cursor (also called a turtle) controled by commands
 
 ## Technologies
 
-Java et JavaFX
+Java and JavaFX
 
 ## Setup workspace :
 
@@ -15,3 +15,5 @@ Java et JavaFX
 
 * Windows : run `gradlew build` to generate jar and `gradlew createExe` to generate exe.
 * Linux : run `./gradlew build` to generate jar
+
+The jar file is inside the folder build/libs and the exe is in the folder build/launch4j
