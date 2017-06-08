@@ -136,51 +136,58 @@ public class Interpreter
     private void parser(String commands)
     {
         ArrayList<String> results = preParser(commands);
-
-        ArrayList<String> allCommands = convertRepete(results);
-
-        // Run all commands
-        Task<Void> task = new Task<Void>()
+        try
         {
-            @Override
-            protected Void call() throws Exception
+            ArrayList<String> allCommands = convertRepete(results);
+
+            // Run all commands
+            Task<Void> task = new Task<Void>()
             {
-                final Task<Void> tas = this;
-                for(String command : allCommands)
+                @Override
+                protected Void call() throws Exception
                 {
-                    Platform.runLater(new Runnable()
+                    final Task<Void> tas = this;
+                    for(String command : allCommands)
                     {
-                        @Override
-                        public void run()
+                        Platform.runLater(new Runnable()
                         {
-                            execute(command, tas);
-                        }
-                    });
-                    Thread.sleep(Interpreter.this.speed);
+                            @Override
+                            public void run()
+                            {
+                                execute(command, tas);
+                            }
+                        });
+                        Thread.sleep(Interpreter.this.speed);
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
-        // Disabled the input to avoid multiple command running at the same time
-        this.input.setDisable(true);
-        task.setOnSucceeded(e ->
+            };
+            // Disabled the input to avoid multiple command running at the same time
+            this.input.setDisable(true);
+            task.setOnSucceeded(e ->
+            {
+                this.input.setDisable(false);
+            });
+            task.setOnFailed(e ->
+            {
+                this.input.setDisable(false);
+            });
+            // The task is cancelled when we encounter an error
+            task.setOnCancelled(e ->
+            {
+                this.input.setDisable(false);
+                showErrorPopup();
+            });
+            // Start the task
+            Thread t = new Thread(task);
+            t.setDaemon(true);
+            t.start();
+        }
+        catch(IllegalArgumentException e)
         {
-            this.input.setDisable(false);
-        });
-        task.setOnFailed(e ->
-        {
-            this.input.setDisable(false);
-        });
-        // The task is cancelled when we encounter an error
-        task.setOnCancelled(e ->
-        {
-            this.input.setDisable(false);
             showErrorPopup();
-        });
-        // Start the task
-        Thread t = new Thread(task);
-        t.setDaemon(true);
-        t.start();
+            return;
+        }
     }
 
     /*
@@ -281,7 +288,7 @@ public class Interpreter
     /*
      * Convert a all repete command into multiple basic commands
      */
-    private ArrayList<String> convertRepete(ArrayList<String> commands)
+    private ArrayList<String> convertRepete(ArrayList<String> commands) throws IllegalArgumentException
     {
         ArrayList<String> result = new ArrayList<String>();
         String[] parts;
@@ -290,6 +297,11 @@ public class Interpreter
             parts = command.split(" ");
             if(parts.length > 2)
             {
+                if(!parts[0].equalsIgnoreCase("repete"))
+                {
+                    throw new IllegalArgumentException();
+                }
+
                 result.addAll(repete(Integer.parseInt(parts[1]), command.split(" ", 3)[2]));
             }
             else
@@ -303,7 +315,7 @@ public class Interpreter
     /*
      * Convert a single repeat command into mutltiple basic commands
      */
-    public ArrayList<String> repete(int times, String commands) // Repeat commands x times
+    public ArrayList<String> repete(int times, String commands) throws IllegalArgumentException// Repeat commands x times
     {
         commands = commands.substring(commands.indexOf("[") + 1).substring(0, commands.lastIndexOf("]") - 1);
 
@@ -429,7 +441,7 @@ public class Interpreter
 
     public void cmd_re(String distance) // Move back
     {
-        moveDistance(Integer.parseInt(distance), (180 + this.cursor.getAngle()%360));
+        moveDistance(Integer.parseInt(distance), (180 + this.cursor.getAngle() % 360));
     }
 
     private void moveDistance(int distance, int angle)
