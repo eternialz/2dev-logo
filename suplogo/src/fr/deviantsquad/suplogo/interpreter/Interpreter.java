@@ -8,29 +8,52 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.deviantsquad.suplogo.cursor.Cursor;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Interpreter
 {
+    private Stage stage;
     private Cursor cursor;
     private Canvas drawingDisplay;
     private GraphicsContext drawingContext;
     private Canvas cursorDisplay;
     private GraphicsContext cursorContext;
+    private TextField input;
     private List<String> history = new ArrayList<String>();
     private int historyIndex;
+    private long speed = 50;
 
-    public Interpreter(Cursor cursor, Canvas drawingDisplay, Canvas cursorDisplay, TextField input)
+    public Interpreter(Stage stage, Cursor cursor, Canvas drawingDisplay, Canvas cursorDisplay, TextField input)
     {
+        this.stage = stage;
         this.cursor = cursor;
         this.drawingDisplay = drawingDisplay;
         this.cursorDisplay = cursorDisplay;
         this.drawingContext = drawingDisplay.getGraphicsContext2D();
         this.cursorContext = cursorDisplay.getGraphicsContext2D();
+        this.input = input;
 
         // Default cursorCanvas settings
         this.cursorContext.setLineWidth(3);
@@ -74,8 +97,101 @@ public class Interpreter
         });
     }
 
-    // sépare l'input
+    private void showErrorPopup()
+    {
+        Text txt = new Text("Erreur dans la commande");
+        txt.setFill(Color.RED);
+
+        HBox box = new HBox(txt);
+        box.setPadding(new Insets(5));
+        box.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(0), new Insets(0))));
+        box.setBorder(new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(0), BorderWidths.DEFAULT)));
+        box.setOpacity(0.0D);
+
+        Popup p = new Popup();
+        p.getContent().add(box);
+        p.setAutoHide(true);
+        Point2D pt = input.localToScreen(0, 0);
+        p.setX(pt.getX());
+        p.setY(pt.getY() - input.getHeight());
+        p.show(this.stage);
+        FadeTransition ft = new FadeTransition(Duration.millis(100), box);
+        ft.setFromValue(0.0D);
+        ft.setToValue(1.0D);
+        ft.setOnFinished(ev ->
+        {
+            PauseTransition ptr = new PauseTransition(Duration.millis(1000));
+            ptr.setOnFinished(eve ->
+            {
+                FadeTransition ftout = new FadeTransition(Duration.millis(100), box);
+                ftout.setFromValue(1.0D);
+                ftout.setToValue(0.0D);
+                ftout.setOnFinished(even ->
+                {
+                    p.hide();
+                });
+                ftout.play();
+            });
+            ptr.play();
+        });
+        ft.play();
+    }
+
+    // Parse the string written inside the TextField
     private void parser(String commands)
+    {
+        ArrayList<String> results = preParser(commands);
+
+        ArrayList<String> allCommands = convertRepete(results);
+
+        // Run all commands
+        Task<Void> task = new Task<Void>()
+        {
+            @Override
+            protected Void call() throws Exception
+            {
+                final Task<Void> tas = this;
+                for(String command : allCommands)
+                {
+                    Platform.runLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            execute(command, tas);
+                        }
+                    });
+                    Thread.sleep(speed);
+                }
+                return null;
+            }
+        };
+        // Disabled the input to avoid multiple command running at the same time
+        this.input.setDisable(true);
+        task.setOnSucceeded(e ->
+        {
+            this.input.setDisable(false);
+        });
+        task.setOnFailed(e ->
+        {
+            this.input.setDisable(false);
+        });
+        // The task is cancelled when we encounter an error
+        task.setOnCancelled(e ->
+        {
+            this.input.setDisable(false);
+            showErrorPopup();
+        });
+        // Start the task
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    /*
+     * Pre parser, split a sigle string containing one or more commands into a list of separate commands
+     */
+    private ArrayList<String> preParser(String commands)
     {
         // Create an ArrayList of all distinct command in commands
         ArrayList<String> results = new ArrayList<>();
@@ -109,7 +225,7 @@ public class Interpreter
             {
                 if(splitResults[0].charAt(0) == '[')
                 {
-                    // Repete case, we add all characters until we find corresponing
+                    // Repete case, we add all characters until we find corresponding
                     // closed brackets
                     results.set(index, results.get(index) + " ");
                     commands = String.join(" ", splitResults);
@@ -143,95 +259,139 @@ public class Interpreter
                 }
                 else
                 {
-                    // if end of commands splitResults[1] is null
-                    results.set(index, results.get(index) + " " + splitResults[0]);
-                    if(splitResults[0].equals(commands))
+                    try
                     {
-                        commands = "";
+                        // if end of commands splitResults[1] is null
+                        results.set(index, results.get(index) + " " + splitResults[0]);
+                        if(splitResults[0].equals(commands))
+                        {
+                            commands = "";
+                        }
+                        else
+                        {
+                            commands = splitResults[1];
+                        }
                     }
-                    else
+                    catch(Exception e)
                     {
-                        commands = splitResults[1];
+                        showErrorPopup();
+                        break;
                     }
                 }
             }
         }
-        execute(results);
-
+        return results;
     }
 
-    private void execute(ArrayList<String> commands)
+    /*
+     * Convert a all repete command into multiple basic commands
+     */
+    private ArrayList<String> convertRepete(ArrayList<String> commands)
+    {
+        ArrayList<String> result = new ArrayList<String>();
+        String[] parts;
+        for(String command : commands)
+        {
+            parts = command.split(" ");
+            if(parts.length > 2)
+            {
+                result.addAll(repete(Integer.parseInt(parts[1]), command.split(" ", 3)[2]));
+            }
+            else
+            {
+                result.add(command);
+            }
+        }
+        return result;
+    }
+
+    /*
+     * Convert a single repeat command into mutltiple basic commands
+     */
+    public ArrayList<String> repete(int times, String commands) // Repeat commands x times
+    {
+        commands = commands.substring(commands.indexOf("[") + 1).substring(0, commands.lastIndexOf("]") - 1);
+
+        ArrayList<String> result = new ArrayList<String>();
+        for(int i = 0; i <= times; i++)
+        {
+            result.addAll(preParser(commands));
+        }
+        return convertRepete(result);
+    }
+
+    private void execute(String command, Task<Void> task)
     {
         // Execute the corresponding commands
 
         Method methods[]; // List of all the possible methods
         Method method = null; // The method to execute
         String[] input;
-        String methodName;
+        String methodName = null;
         String argument = null;
 
-        // Try to find the method corresponding to the command
-        for(int i = 0; i < commands.size(); i++)
+        input = command.split(" ");
+        if(input.length > 2)
         {
-            input = commands.get(i).split(" ");
-            if(input.length > 2)
+            // repete(Integer.parseInt(input[1]), command.split(" ", 3)[2]);
+            return;
+        }
+        else if(input.length == 2)
+        {
+            methodName = input[0].toLowerCase();
+            argument = input[1].toLowerCase();
+        }
+        else
+        {
+            methodName = input[0].toLowerCase();
+            argument = null;
+        }
+
+        try
+        {
+            methods = this.getClass().getDeclaredMethods(); // Get all methods
+            for(int x = 0; x < methods.length; x++)
             {
-                repete(Integer.parseInt(input[1]), commands.get(i).split(" ", 3)[2]);
-                continue;
+                if(methods[x].getName().equals(methodName))
+                { // If the method exists
+                    method = methods[x]; // Set the method to execute
+                }
             }
-            else if(input.length == 2)
+        }
+        catch(SecurityException e)
+        {
+            e.printStackTrace();
+            task.cancel();
+        }
+
+        // Try to execute the method found
+        try
+        {
+            if(method != null) // If the method has been found
             {
-                methodName = input[0].toLowerCase();
-                argument = input[1].toLowerCase();
+                if(argument != null)
+                {
+                    method.invoke(Interpreter.this, argument); // execute the command
+                }
+                else
+                {
+                    method.invoke(Interpreter.this);
+                }
+
+                Interpreter.this.drawingContext.save();
+                Interpreter.this.drawingContext.restore();
+                Interpreter.this.refresh();
             }
             else
             {
-                methodName = input[0].toLowerCase();
-                argument = null;
-            }
-
-            try
-            {
-                methods = this.getClass().getDeclaredMethods(); // Get all methods
-                for(int x = 0; x < methods.length; x++)
-                {
-                    if(methods[x].getName().equals(methodName))
-                    { // If the method exists
-                        method = methods[x]; // Set the method to execute
-                    }
-                }
-            }
-            catch(SecurityException e)
-            {
-                e.printStackTrace();
-            }
-
-            // Try to execute the method found
-            try
-            {
-                if(method != null) // If the method has been found
-                {
-                    if(argument != null)
-                    {
-                        method.invoke(this, argument); // execute the command
-                    }
-                    else
-                    {
-                        method.invoke(this);
-                    }
-
-                    // TimeUnit.MILLISECONDS.sleep(50); // Wait 200 milliseconds to give an effect of step by step
-                    this.drawingContext.save();
-                    this.drawingContext.restore();
-                    refresh();
-                }
-            }
-            catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
-            {
-                e.printStackTrace();
+                task.cancel();
             }
         }
-
+        catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+        {
+            e.printStackTrace();
+            task.cancel();
+        }
     }
 
     public void refresh()
@@ -332,18 +492,21 @@ public class Interpreter
         this.cursor.setHide(false);
     }
 
-    public void repete(int times, String commands) // Repeat commands x times
-    {
-        commands = commands.substring(commands.indexOf("[") + 1).substring(0, commands.lastIndexOf("]") - 1);
-
-        for(int i = 0; i <= times; i++)
-        {
-            parser(commands);
-        }
-    }
-
     public void ve() // Clear drawing canvas
     {
         this.drawingContext.clearRect(0, 0, 800, 800);
+    }
+
+    public void vi(String newspeed)
+    {
+        long l = Long.parseLong(newspeed);
+        if(l < 0)
+        {
+            speed = 0;
+        }
+        else
+        {
+            speed = l;
+        }
     }
 }

@@ -41,7 +41,7 @@ public class Suplogo extends Application
         root.setCenter(center);
 
         // Create the interpreter to get and execute commands from the user
-        Interpreter interpreter = new Interpreter(new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas, input);
+        Interpreter interpreter = new Interpreter(primaryStage, new Cursor(400.0, 400.0), drawingCanvas, cursorCanvas, input);
 
         // Set the windows parameters
         primaryStage.setMinHeight(880);
