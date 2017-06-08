@@ -8,10 +8,10 @@ Java et JavaFX
 
 ## Setup workspace :
 
-For Windows run in a cmd `gradlew eclipse` or `gradlew idea`
-For Linux / MacOS, run in a terminal `./gradlew eclipse` or `./gradlew idea`
+* For Windows run in a cmd `gradlew eclipse` or `gradlew idea`
+* For Linux / MacOS, run in a terminal `./gradlew eclipse` or `./gradlew idea`
 
 ## Build :
 
-Windows : run `gradlew build` to generate jar and `gradlew createExe` to generate exe.
-Linux : run `./gradlew build` to generate jar
+* Windows : run `gradlew build` to generate jar and `gradlew createExe` to generate exe.
+* Linux : run `./gradlew build` to generate jar
