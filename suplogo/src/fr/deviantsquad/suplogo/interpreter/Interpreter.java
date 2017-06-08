@@ -378,8 +378,6 @@ public class Interpreter
                     method.invoke(Interpreter.this);
                 }
 
-                Interpreter.this.drawingContext.save();
-                Interpreter.this.drawingContext.restore();
                 Interpreter.this.refresh();
             }
             else
