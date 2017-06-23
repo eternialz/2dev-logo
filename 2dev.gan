@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2017-03-21" view-index="1" gantt-divider-location="461" resource-divider-location="300" version="2.8.5" locale="fr">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2017-04-06" view-index="0" gantt-divider-location="461" resource-divider-location="300" version="2.8.5" locale="fr">
     <description/>
     <view zooming-state="default:3" id="gantt-chart">
         <field id="tpd3" name="Nom" width="248" order="0"/>
@@ -54,14 +54,15 @@
         <resource id="4" name="Robin BIECHY" function="Default:1" contacts="214666@supinfo.com" phone=""/>
     </resources>
     <allocations>
-        <allocation task-id="44" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="44" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="40" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="42" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="44" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="41" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="42" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
-        <allocation task-id="44" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="39" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="44" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="43" resource-id="3" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="44" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="36" resource-id="4" function="Default:1" responsible="true" load="100.0"/>
         <allocation task-id="43" resource-id="4" function="Default:1" responsible="true" load="100.0"/>
     </allocations>
