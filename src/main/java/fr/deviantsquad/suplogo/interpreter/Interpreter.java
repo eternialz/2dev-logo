@@ -17,6 +17,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -42,6 +43,8 @@ public class Interpreter
     private List<String> history = new ArrayList<String>();
     private int historyIndex;
     private long speed = 50;
+
+    private static final Image IMG_CUR = new Image("/logo_wings.png");
 
     public Interpreter(Stage stage, Cursor cursor, Canvas drawingDisplay, Canvas cursorDisplay, TextField input)
     {
@@ -426,7 +429,8 @@ public class Interpreter
         this.cursorContext.translate(-rotationCenterX, -rotationCenterY);
 
         // Create a rect in a rotated context to create a rotated rect
-        this.cursorContext.fillRect(rotationCenterX - 3, rotationCenterY - 3, 6, 6);
+        //this.cursorContext.fillRect(rotationCenterX - 3, rotationCenterY - 3, 6, 6);
+        this.cursorContext.drawImage(IMG_CUR, rotationCenterX - 50, rotationCenterY - 50, 100, 100);
 
         // Restore the context but keep the rotated rect
         this.cursorContext.restore();
