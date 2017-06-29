@@ -429,8 +429,8 @@ public class Interpreter
         this.cursorContext.translate(-rotationCenterX, -rotationCenterY);
 
         // Create a rect in a rotated context to create a rotated rect
-        //this.cursorContext.fillRect(rotationCenterX - 3, rotationCenterY - 3, 6, 6);
-        this.cursorContext.drawImage(IMG_CUR, rotationCenterX - 50, rotationCenterY - 50, 100, 100);
+        this.cursorContext.fillRect(rotationCenterX - 3, rotationCenterY - 3, 6, 6);
+        //this.cursorContext.drawImage(IMG_CUR, rotationCenterX - 50, rotationCenterY - 50, 100, 100);
 
         // Restore the context but keep the rotated rect
         this.cursorContext.restore();
