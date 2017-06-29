@@ -1,8 +1,8 @@
 TD 180 REPETE 12 [TD 180 REPETE 12 [AV 120 TD 150]]
 
-repete 20 [repete 5 [av 50 tg 60] av 50 tg 20]
+repete 17 [repete 5 [av 50 tg 60] av 50 tg 20]
 
-repete 20 [av 100 tg 50 re 100 tg 50]
+repete 17 [av 100 tg 50 re 100 tg 50]
 
 vi 5 repete 18 [repete 35 [av 10 td 10] tg 20] fcc #ff0000 repete 18 [repete 35 [av 20 td 10] tg 20]  fcc #00ffff repete 18 [repete 35 [av 30 td 10] tg 20]
 
